@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chats | Polytechnic Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#06B6D4);
+
+min-height:100vh;
+
+padding:20px;
+
+padding-bottom:90px;
+
+color:white;
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.header h2{
+
+font-size:24px;
+
+font-weight:700;
+
+}
+
+.back{
+
+width:45px;
+
+height:45px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+backdrop-filter:blur(15px);
+
+cursor:pointer;
+
+}
+
+.search{
+
+margin-bottom:20px;
+
+}
+
+.search input{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+outline:none;
+
+border-radius:15px;
+
+font-size:15px;
+
+}
+
+.chat-list{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.chat-card{
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+border-radius:18px;
+
+padding:15px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.chat-card:hover{
+
+transform:translateY(-3px);
+
+}
+
+.left{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+.avatar{
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+background:#fff;
+
+color:#4F46E5;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+}
+
+.info h3{
+
+font-size:16px;
+
+}
+
+.info p{
+
+font-size:13px;
+
+opacity:.8;
+
+margin-top:4px;
+
+}
+
+.right{
+
+text-align:right;
+
+}
+
+.time{
+
+font-size:12px;
+
+opacity:.8;
+
+}
+
+.online{
+
+margin-top:8px;
+
+color:#00ff88;
+
+font-size:12px;
+
+}
+
+.empty{
+
+text-align:center;
+
+margin-top:80px;
+
+opacity:.8;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="back"
+
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</div>
+
+<h2>
+
+Chats
+
+</h2>
+
+<div style="width:45px;"></div>
+
+</div>
+
+<div class="search">
+
+<input
+
+type="text"
+
+id="searchChat"
+
+placeholder="Search Students...">
+
+</div>
+
+<div
+
+class="chat-list"
+
+id="chatList">
+
+</div>
+
+<div
+
+class="empty"
+
+id="emptyBox"
+
+style="display:none;">
+
+No Chats Available
+
+</div>
+  <script>
+
+let users = JSON.parse(localStorage.getItem("polyhub_users")) || [];
+
+const currentUser =
+JSON.parse(localStorage.getItem("polyhub_current_user"));
+
+const chatList = document.getElementById("chatList");
+
+const emptyBox = document.getElementById("emptyBox");
+
+function renderChats(keyword=""){
+
+chatList.innerHTML="";
+
+const list = users.filter(user=>{
+
+if(currentUser && user.mobile===currentUser.mobile){
+
+return false;
+
+}
+
+return user.name.toLowerCase().includes(keyword.toLowerCase()) ||
+
+user.branch.toLowerCase().includes(keyword.toLowerCase()) ||
+
+user.college.toLowerCase().includes(keyword.toLowerCase());
+
+});
+
+if(list.length===0){
+
+emptyBox.style.display="block";
+
+return;
+
+}
+
+emptyBox.style.display="none";
+
+list.forEach(user=>{
+
+const first=user.name.charAt(0).toUpperCase();
+
+const online=Math.random()>0.5;
+
+chatList.innerHTML+=`
+
+<div class="chat-card"
+
+onclick="openChat('${user.mobile}')">
+
+<div class="left">
+
+<div class="avatar">
+
+${first}
+
+</div>
+
+<div class="info">
+
+<h3>
+
+${user.name}
+
+</h3>
+
+<p>
+
+${user.branch} • ${user.college}
+
+</p>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="time">
+
+${new Date().toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit"
+})}
+
+</div>
+
+<div class="online">
+
+${online?"🟢 Online":"⚪ Offline"}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+renderChats();
+
+document.getElementById("searchChat").addEventListener("keyup",function(){
+
+renderChats(this.value);
+
+});
+
+function openChat(mobile){
+
+window.location.href="message.html?user="+mobile;
+
+}
+
+</script>
+
+<style>
+
+.bottom-nav{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+height:75px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+border-top:1px solid rgba(255,255,255,.2);
+
+}
+
+.bottom-nav a{
+
+text-decoration:none;
+
+color:white;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+font-size:12px;
+
+}
+
+.bottom-nav a i{
+
+font-size:20px;
+
+margin-bottom:4px;
+
+}
+
+.bottom-nav .active{
+
+color:#FFD700;
+
+}
+
+</style>
+
+<div class="bottom-nav">
+
+<a href="home.html">
+
+<i class="fa-solid fa-house"></i>
+
+<span>Home</span>
+
+</a>
+
+<a href="student.html">
+
+<i class="fa-solid fa-user-graduate"></i>
+
+<span>Students</span>
+
+</a>
+
+<a href="community.html">
+
+<i class="fa-solid fa-users"></i>
+
+<span>Community</span>
+
+</a>
+
+<a href="notes.html">
+
+<i class="fa-solid fa-book"></i>
+
+<span>Notes</span>
+
+</a>
+
+<a href="profile.html">
+
+<i class="fa-solid fa-user"></i>
+
+<span>Profile</span>
+
+</a>
+
+</div>
+
+</body>
+
+</html>
