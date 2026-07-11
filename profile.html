@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Profile | Polytechnic Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#06B6D4);
+
+min-height:100vh;
+
+padding:20px;
+
+padding-bottom:100px;
+
+color:#fff;
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+}
+
+.back{
+
+width:45px;
+
+height:45px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+backdrop-filter:blur(15px);
+
+cursor:pointer;
+
+}
+
+.title{
+
+font-size:23px;
+
+font-weight:700;
+
+}
+
+.profile-card{
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+padding:25px;
+
+border-radius:25px;
+
+text-align:center;
+
+margin-bottom:20px;
+
+}
+
+.avatar{
+
+width:110px;
+
+height:110px;
+
+border-radius:50%;
+
+background:#fff;
+
+color:#4F46E5;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:45px;
+
+font-weight:bold;
+
+margin:auto;
+
+margin-bottom:15px;
+
+}
+
+.name{
+
+font-size:24px;
+
+font-weight:700;
+
+margin-bottom:5px;
+
+}
+
+.branch{
+
+opacity:.9;
+
+font-size:15px;
+
+margin-bottom:20px;
+
+}
+
+.info{
+
+background:rgba(255,255,255,.12);
+
+padding:15px;
+
+border-radius:15px;
+
+margin-bottom:15px;
+
+text-align:left;
+
+}
+
+.info h4{
+
+margin-bottom:10px;
+
+}
+
+.info p{
+
+font-size:14px;
+
+margin:8px 0;
+
+line-height:1.6;
+
+}
+
+.btn{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:15px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+margin-top:15px;
+
+}
+
+.edit{
+
+background:#fff;
+
+color:#4F46E5;
+
+}
+
+.logout{
+
+background:#ff4d4d;
+
+color:#fff;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="back"
+
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</div>
+
+<div class="title">
+
+My Profile
+
+</div>
+
+<div style="width:45px"></div>
+
+</div>
+
+<div class="profile-card">
+
+<div class="avatar"
+
+id="avatar">
+
+L
+
+</div>
+
+<div class="name"
+
+id="name">
+
+Loading...
+
+</div>
+
+<div class="branch"
+
+id="branch">
+
+Loading...
+
+</div>
+
+<div class="info">
+
+<h4>
+
+Student Details
+
+</h4>
+
+<p>
+
+🏫 College :
+<span id="college"></span>
+
+</p>
+
+<p>
+
+📚 Branch :
+<span id="branch2"></span>
+
+</p>
+
+<p>
+
+🎓 Semester :
+<span id="semester"></span>
+
+</p>
+
+<p>
+
+📱 Mobile :
+<span id="mobile"></span>
+
+</p>
+
+<p>
+
+📅 Session :
+<span id="session"></span>
+
+</p>
+
+<p>
+
+📝 Bio :
+<span id="bio"></span>
+
+</p>
+
+</div>
+
+<button
+
+class="btn edit">
+
+Edit Profile
+
+</button>
+
+<button
+
+class="btn logout"
+
+id="logoutBtn">
+
+Logout
+
+</button>
+
+</div>
+<script>
+
+const currentUser = JSON.parse(localStorage.getItem("polyhub_current_user"));
+
+if(currentUser){
+
+document.getElementById("avatar").innerHTML =
+currentUser.name.charAt(0).toUpperCase();
+
+document.getElementById("name").innerHTML =
+currentUser.name;
+
+document.getElementById("branch").innerHTML =
+currentUser.branch+" | "+currentUser.semester;
+
+document.getElementById("college").innerHTML =
+currentUser.college;
+
+document.getElementById("branch2").innerHTML =
+currentUser.branch;
+
+document.getElementById("semester").innerHTML =
+currentUser.semester;
+
+document.getElementById("mobile").innerHTML =
+currentUser.mobile;
+
+document.getElementById("session").innerHTML =
+currentUser.session;
+
+document.getElementById("bio").innerHTML =
+currentUser.bio || "No Bio";
+
+}else{
+
+window.location.href="index.html";
+
+}
+
+document.querySelector(".edit").addEventListener("click",function(){
+
+alert("Edit Profile Coming Soon 🚀");
+
+});
+
+document.getElementById("logoutBtn").addEventListener("click",function(){
+
+localStorage.removeItem("polyhub_current_user");
+
+window.location.href="index.html";
+
+});
+
+</script>
+
+<style>
+
+.bottom-nav{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+height:75px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+border-top:1px solid rgba(255,255,255,.2);
+
+}
+
+.bottom-nav a{
+
+text-decoration:none;
+
+color:white;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+font-size:12px;
+
+transition:.3s;
+
+}
+
+.bottom-nav a i{
+
+font-size:20px;
+
+margin-bottom:4px;
+
+}
+
+.bottom-nav .active{
+
+color:#FFD700;
+
+}
+
+.bottom-nav a:hover{
+
+transform:translateY(-3px);
+
+}
+
+</style>
+
+<div class="bottom-nav">
+
+<a href="home.html">
+
+<i class="fa-solid fa-house"></i>
+
+<span>Home</span>
+
+</a>
+
+<a href="student.html">
+
+<i class="fa-solid fa-user-graduate"></i>
+
+<span>Students</span>
+
+</a>
+
+<a href="community.html">
+
+<i class="fa-solid fa-users"></i>
+
+<span>Community</span>
+
+</a>
+
+<a href="notes.html">
+
+<i class="fa-solid fa-book"></i>
+
+<span>Notes</span>
+
+</a>
+
+<a href="profile.html" class="active">
+
+<i class="fa-solid fa-user"></i>
+
+<span>Profile</span>
+
+</a>
+
+</div>
+
+</body>
+
+</html>
