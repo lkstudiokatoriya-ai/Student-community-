@@ -364,10 +364,9 @@ View
 
 </button>
 
-<button class="btn message">
-
+<button class="btn message"
+onclick="openChat('${student.mobile}')">
 Message
-
 </button>
 
 </div>
@@ -387,6 +386,9 @@ search.addEventListener("keyup",function(){
 renderStudents(this.value);
 
 });
+  function openChat(mobile){
+window.location.href="message.html?user="+mobile;
+  }
 
 </script>
 
