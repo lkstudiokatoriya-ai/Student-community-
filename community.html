@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Community | Polytechnic Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#06B6D4);
+
+min-height:100vh;
+
+color:#fff;
+
+padding:20px;
+
+padding-bottom:100px;
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.back{
+
+width:45px;
+
+height:45px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+backdrop-filter:blur(15px);
+
+cursor:pointer;
+
+}
+
+.title{
+
+font-size:23px;
+
+font-weight:700;
+
+}
+
+.search{
+
+margin-bottom:20px;
+
+}
+
+.search input{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+outline:none;
+
+border-radius:15px;
+
+font-size:15px;
+
+}
+
+.post-box{
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(18px);
+
+padding:18px;
+
+border-radius:20px;
+
+margin-bottom:20px;
+
+}
+
+.post-box textarea{
+
+width:100%;
+
+height:110px;
+
+border:none;
+
+outline:none;
+
+resize:none;
+
+padding:15px;
+
+border-radius:15px;
+
+font-size:15px;
+
+margin-bottom:15px;
+
+}
+
+.post-actions{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+}
+
+.upload{
+
+display:flex;
+
+gap:15px;
+
+font-size:20px;
+
+}
+
+.upload i{
+
+cursor:pointer;
+
+}
+
+.post-btn{
+
+padding:12px 25px;
+
+border:none;
+
+border-radius:12px;
+
+background:#fff;
+
+color:#4F46E5;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.feed-title{
+
+font-size:18px;
+
+font-weight:600;
+
+margin-bottom:15px;
+
+}
+
+.feed{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.post-card{
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(15px);
+
+border-radius:20px;
+
+padding:18px;
+
+}
+
+.user{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+margin-bottom:12px;
+
+}
+
+.avatar{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+background:#fff;
+
+color:#4F46E5;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+}
+
+.user-info h3{
+
+font-size:16px;
+
+}
+
+.user-info p{
+
+font-size:12px;
+
+opacity:.8;
+
+}
+
+.post-text{
+
+font-size:15px;
+
+line-height:1.6;
+
+margin-bottom:15px;
+
+word-break:break-word;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="back" onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</div>
+
+<div class="title">
+
+Community
+
+</div>
+
+<div style="width:45px;"></div>
+
+</div>
+
+<div class="search">
+
+<input
+type="text"
+id="searchPost"
+placeholder="Search Community Posts...">
+
+</div>
+
+<div class="post-box">
+
+<textarea
+id="postInput"
+placeholder="What's on your mind?"></textarea>
+
+<div class="post-actions">
+
+<div class="upload">
+
+<i class="fa-regular fa-image"></i>
+
+<i class="fa-regular fa-face-smile"></i>
+
+</div>
+
+<button
+class="post-btn"
+id="postBtn">
+
+Post
+
+</button>
+
+</div>
+
+</div>
+
+<div class="feed-title">
+
+Latest Posts
+
+</div>
+
+<div
+class="feed"
+id="feed">
+
+</div>
+<script>
+
+let posts = JSON.parse(localStorage.getItem("polyhub_posts")) || [];
+
+const users = JSON.parse(localStorage.getItem("polyhub_users")) || [];
+
+const currentUser = JSON.parse(localStorage.getItem("polyhub_current_user"));
+
+const feed = document.getElementById("feed");
+
+const postInput = document.getElementById("postInput");
+
+const postBtn = document.getElementById("postBtn");
+
+function getCurrentName(){
+
+if(currentUser){
+
+return currentUser.name;
+
+}
+
+return "Student";
+
+}
+
+function createPost(){
+
+const text = postInput.value.trim();
+
+if(text===""){
+
+alert("Write something first.");
+
+return;
+
+}
+
+const post={
+
+id:Date.now(),
+
+name:getCurrentName(),
+
+text:text,
+
+time:new Date().toLocaleString(),
+
+likes:0,
+
+comments:[]
+
+};
+
+posts.unshift(post);
+
+localStorage.setItem("polyhub_posts",JSON.stringify(posts));
+
+postInput.value="";
+
+renderPosts();
+
+}
+
+postBtn.addEventListener("click",createPost);
+
+function renderPosts(keyword=""){
+
+feed.innerHTML="";
+
+const list = posts.filter(post=>{
+
+return post.text.toLowerCase().includes(keyword.toLowerCase()) ||
+
+post.name.toLowerCase().includes(keyword.toLowerCase());
+
+});
+
+if(list.length===0){
+
+feed.innerHTML=`
+
+<div class="post-card">
+
+<div class="post-text">
+
+No Community Posts Yet.
+
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+list.forEach(post=>{
+
+const first = post.name.charAt(0).toUpperCase();
+
+feed.innerHTML += `
+
+<div class="post-card">
+
+<div class="user">
+
+<div class="avatar">
+
+${first}
+
+</div>
+
+<div class="user-info">
+
+<h3>
+
+${post.name}
+
+</h3>
+
+<p>
+
+${post.time}
+
+</p>
+
+</div>
+
+</div>
+
+<div class="post-text">
+
+${post.text}
+
+</div>
+
+<div class="post-footer"
+
+id="footer-${post.id}">
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+renderPosts();
+
+document.getElementById("searchPost").addEventListener("keyup",function(){
+
+renderPosts(this.value);
+
+});
+
+</script>
+<style>
+
+.post-footer{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+border-top:1px solid rgba(255,255,255,.2);
+
+padding-top:12px;
+
+margin-top:10px;
+
+}
+
+.action{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+cursor:pointer;
+
+font-size:14px;
+
+padding:8px 12px;
+
+border-radius:10px;
+
+transition:.3s;
+
+}
+
+.action:hover{
+
+background:rgba(255,255,255,.15);
+
+}
+
+.action i{
+
+font-size:18px;
+
+}
+
+.comment-box{
+
+margin-top:15px;
+
+display:none;
+
+}
+
+.comment-box input{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+outline:none;
+
+border-radius:10px;
+
+margin-bottom:10px;
+
+}
+
+.comment-btn{
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:10px;
+
+background:#fff;
+
+color:#4F46E5;
+
+font-weight:600;
+
+cursor:pointer;
+
+}
+
+.comment-list{
+
+margin-top:12px;
+
+font-size:14px;
+
+line-height:1.7;
+
+}
+
+.comment-item{
+
+background:rgba(255,255,255,.12);
+
+padding:10px;
+
+border-radius:10px;
+
+margin-bottom:8px;
+
+}
+
+</style>
+
+<script>
+
+function renderPosts(keyword=""){
+
+feed.innerHTML="";
+
+const list=posts.filter(post=>
+
+post.text.toLowerCase().includes(keyword.toLowerCase()) ||
+
+post.name.toLowerCase().includes(keyword.toLowerCase())
+
+);
+
+if(list.length===0){
+
+feed.innerHTML=`
+<div class="post-card">
+<div class="post-text">
+No Community Posts Yet.
+</div>
+</div>
+`;
+
+return;
+
+}
+
+list.forEach(post=>{
+
+const first=post.name.charAt(0).toUpperCase();
+
+feed.innerHTML+=`
+
+<div class="post-card">
+
+<div class="user">
+
+<div class="avatar">
+
+${first}
+
+</div>
+
+<div class="user-info">
+
+<h3>${post.name}</h3>
+
+<p>${post.time}</p>
+
+</div>
+
+</div>
+
+<div class="post-text">
+
+${post.text}
+
+</div>
+
+<div class="post-footer">
+
+<div class="action"
+
+onclick="likePost(${post.id})">
+
+<i class="fa-solid fa-heart"></i>
+
+<span>${post.likes}</span>
+
+</div>
+
+<div class="action"
+
+onclick="toggleComment(${post.id})">
+
+<i class="fa-solid fa-comment"></i>
+
+<span>${post.comments.length}</span>
+
+</div>
+
+<div class="action"
+
+onclick="sharePost(${post.id})">
+
+<i class="fa-solid fa-share"></i>
+
+</div>
+
+<div class="action"
+
+onclick="deletePost(${post.id})">
+
+<i class="fa-solid fa-trash"></i>
+
+</div>
+
+</div>
+
+<div
+
+class="comment-box"
+
+id="comment-${post.id}">
+
+<input
+
+type="text"
+
+id="commentInput-${post.id}"
+
+placeholder="Write a comment...">
+
+<button
+
+class="comment-btn"
+
+onclick="addComment(${post.id})">
+
+Comment
+
+</button>
+
+<div
+
+class="comment-list"
+
+id="commentList-${post.id}">
+
+${post.comments.map(c=>`<div class="comment-item">${c}</div>`).join("")}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function likePost(id){
+
+const post=posts.find(p=>p.id===id);
+
+post.likes++;
+
+localStorage.setItem("polyhub_posts",JSON.stringify(posts));
+
+renderPosts();
+
+}
+
+function toggleComment(id){
+
+const box=document.getElementById("comment-"+id);
+
+box.style.display=box.style.display==="block"?"none":"block";
+
+}
+
+function addComment(id){
+
+const input=document.getElementById("commentInput-"+id);
+
+const text=input.value.trim();
+
+if(text==="") return;
+
+const post=posts.find(p=>p.id===id);
+
+post.comments.push(text);
+
+localStorage.setItem("polyhub_posts",JSON.stringify(posts));
+
+renderPosts();
+
+}
+
+function sharePost(id){
+
+alert("Share Feature Coming Soon");
+
+}
+
+function deletePost(id){
+
+posts=posts.filter(p=>p.id!==id);
+
+localStorage.setItem("polyhub_posts",JSON.stringify(posts));
+
+renderPosts();
+
+}
+
+</script>
+<style>
+
+.bottom-nav{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+height:75px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+border-top:1px solid rgba(255,255,255,.2);
+
+z-index:999;
+
+}
+
+.bottom-nav a{
+
+text-decoration:none;
+
+color:white;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+font-size:12px;
+
+transition:.3s;
+
+}
+
+.bottom-nav a i{
+
+font-size:20px;
+
+margin-bottom:4px;
+
+}
+
+.bottom-nav a:hover{
+
+transform:translateY(-3px);
+
+}
+
+.bottom-nav .active{
+
+color:#FFD700;
+
+}
+
+</style>
+
+<div class="bottom-nav">
+
+<a href="home.html">
+
+<i class="fa-solid fa-house"></i>
+
+<span>Home</span>
+
+</a>
+
+<a href="student.html">
+
+<i class="fa-solid fa-user-graduate"></i>
+
+<span>Students</span>
+
+</a>
+
+<a href="community.html" class="active">
+
+<i class="fa-solid fa-users"></i>
+
+<span>Community</span>
+
+</a>
+
+<a href="notes.html">
+
+<i class="fa-solid fa-book"></i>
+
+<span>Notes</span>
+
+</a>
+
+<a href="profile.html">
+
+<i class="fa-solid fa-user"></i>
+
+<span>Profile</span>
+
+</a>
+
+</div>
+
+<script>
+
+/* Auto Refresh Feed */
+
+setInterval(function(){
+
+posts = JSON.parse(localStorage.getItem("polyhub_posts")) || [];
+
+renderPosts(document.getElementById("searchPost").value);
+
+},2000);
+
+/* Ripple Animation */
+
+document.querySelectorAll(".post-btn,.action").forEach(btn=>{
+
+btn.addEventListener("click",function(){
+
+this.style.transform="scale(.95)";
+
+setTimeout(()=>{
+
+this.style.transform="scale(1)";
+
+},120);
+
+});
+
+});
+
+/* Welcome Message */
+
+console.log("✅ Polytechnic Hub Community Loaded");
+
+</script>
+
+</body>
+
+</html>
