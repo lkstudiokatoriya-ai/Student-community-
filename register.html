@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Registration | Polytechnic Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:20px;
+
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#06B6D4);
+
+}
+
+.container{
+
+width:100%;
+
+max-width:450px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+border-radius:25px;
+
+padding:30px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+color:white;
+
+animation:fade .5s ease;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.logo{
+
+font-size:60px;
+
+text-align:center;
+
+margin-bottom:10px;
+
+}
+
+h2{
+
+text-align:center;
+
+margin-bottom:5px;
+
+}
+
+p{
+
+text-align:center;
+
+margin-bottom:25px;
+
+opacity:.9;
+
+font-size:14px;
+
+}
+
+.input-group{
+
+margin-bottom:15px;
+
+}
+
+.input-group label{
+
+display:block;
+
+margin-bottom:6px;
+
+font-size:14px;
+
+}
+
+input,select,textarea{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+outline:none;
+
+border-radius:12px;
+
+font-size:15px;
+
+}
+
+textarea{
+
+resize:none;
+
+height:90px;
+
+}
+
+.password-box{
+
+position:relative;
+
+}
+
+.password-box span{
+
+position:absolute;
+
+right:15px;
+
+top:15px;
+
+cursor:pointer;
+
+color:#555;
+
+font-size:18px;
+
+}
+
+button{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:12px;
+
+background:#fff;
+
+color:#4F46E5;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+transform:scale(1.02);
+
+}
+
+.bottom{
+
+margin-top:20px;
+
+text-align:center;
+
+font-size:14px;
+
+}
+
+.bottom a{
+
+color:white;
+
+font-weight:600;
+
+text-decoration:none;
+
+}
+
+.success{
+
+display:none;
+
+background:#16a34a;
+
+padding:15px;
+
+border-radius:12px;
+
+margin-top:20px;
+
+text-align:center;
+
+font-weight:600;
+
+}
+
+.error{
+
+display:none;
+
+background:#dc2626;
+
+padding:12px;
+
+border-radius:10px;
+
+margin-bottom:15px;
+
+text-align:center;
+
+font-size:14px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+
+🎓
+
+</div>
+
+<h2>
+
+Student Registration
+
+</h2>
+
+<p>
+
+Join Polytechnic Hub Community
+
+</p>
+
+<div class="error" id="errorBox"></div>
+
+<form id="registerForm">
+
+<div class="input-group">
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="name"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Mobile Number</label>
+
+<input
+type="tel"
+id="mobile"
+maxlength="10"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Email (Optional)</label>
+
+<input
+type="email"
+id="email">
+
+</div>
+
+<div class="input-group">
+
+<label>Password</label>
+
+<div class="password-box">
+
+<input
+type="password"
+id="password"
+required>
+
+<span onclick="togglePassword('password')">
+
+👁
+
+</span>
+
+</div>
+
+</div>
+
+<div class="input-group">
+
+<label>Confirm Password</label>
+
+<div class="password-box">
+
+<input
+type="password"
+id="confirmPassword"
+required>
+
+<span onclick="togglePassword('confirmPassword')">
+
+👁
+
+</span>
+
+</div>
+
+</div>
+
+<div class="input-group">
+
+<label>College Name</label>
+
+<input
+type="text"
+id="college"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Branch</label>
+
+<select id="branch" required>
+
+<option value="">Select Branch</option>
+
+<option>Computer Science</option>
+
+<option>Electrical</option>
+
+<option>Mechanical</option>
+
+<option>Civil</option>
+
+<option>Electronics</option>
+
+<option>Automobile</option>
+
+<option>Mining</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>Semester</label>
+
+<select id="semester" required>
+
+<option value="">Select Semester</option>
+
+<option>1st</option>
+
+<option>2nd</option>
+
+<option>3rd</option>
+
+<option>4th</option>
+
+<option>5th</option>
+
+<option>6th</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>Session</label>
+
+<input
+type="text"
+id="session"
+placeholder="2026-2029"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Bio (Optional)</label>
+
+<textarea
+id="bio"
+placeholder="Write something about yourself..."></textarea>
+
+</div>
+
+<button type="submit">
+
+Register Now
+
+</button>
+
+</form>
+
+<div class="success" id="successBox">
+
+Registration Successful...<br>
+
+Redirecting to Login...
+
+</div>
+
+<div class="bottom">
+
+Already have an account?
+
+<a href="index.html">
+
+Login
+
+</a>
+
+</div>
+</div>
+
+<script>
+
+function togglePassword(id){
+
+let input=document.getElementById(id);
+
+if(input.type==="password"){
+input.type="text";
+}else{
+input.type="password";
+}
+
+}
+
+document.getElementById("registerForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const name=document.getElementById("name").value.trim();
+
+const mobile=document.getElementById("mobile").value.trim();
+
+const email=document.getElementById("email").value.trim();
+
+const password=document.getElementById("password").value;
+
+const confirmPassword=document.getElementById("confirmPassword").value;
+
+const college=document.getElementById("college").value.trim();
+
+const branch=document.getElementById("branch").value;
+
+const semester=document.getElementById("semester").value;
+
+const session=document.getElementById("session").value.trim();
+
+const bio=document.getElementById("bio").value.trim();
+
+const error=document.getElementById("errorBox");
+
+error.style.display="none";
+
+if(password!==confirmPassword){
+
+error.innerHTML="Passwords do not match.";
+
+error.style.display="block";
+
+return;
+
+}
+
+if(mobile.length!=10){
+
+error.innerHTML="Enter valid 10 digit mobile number.";
+
+error.style.display="block";
+
+return;
+
+}
+
+let users=JSON.parse(localStorage.getItem("polyhub_users"))||[];
+
+let exists=users.find(user=>user.mobile===mobile);
+
+if(exists){
+
+error.innerHTML="This mobile number is already registered.";
+
+error.style.display="block";
+
+return;
+
+}
+
+users.push({
+
+name:name,
+
+mobile:mobile,
+
+email:email,
+
+password:password,
+
+college:college,
+
+branch:branch,
+
+semester:semester,
+
+session:session,
+
+bio:bio,
+
+createdAt:new Date().toISOString()
+
+});
+
+localStorage.setItem("polyhub_users",JSON.stringify(users));
+
+document.getElementById("registerForm").style.display="none";
+
+document.getElementById("successBox").style.display="block";
+
+setTimeout(function(){
+
+window.location.href="index.html";
+
+},3000);
+
+});
+
+</script>
+
+</body>
+
+</html>
