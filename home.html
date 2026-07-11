@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home | Polytechnic Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#4F46E5,#7C3AED,#06B6D4);
+
+min-height:100vh;
+
+color:#fff;
+
+padding-bottom:90px;
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px;
+
+}
+
+.logo{
+
+font-size:24px;
+
+font-weight:700;
+
+}
+
+.profile{
+
+width:45px;
+
+height:45px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.2);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+backdrop-filter:blur(10px);
+
+}
+
+.welcome{
+
+margin:0 20px;
+
+background:rgba(255,255,255,.15);
+
+padding:20px;
+
+border-radius:20px;
+
+backdrop-filter:blur(20px);
+
+}
+
+.welcome h2{
+
+font-size:24px;
+
+margin-bottom:5px;
+
+}
+
+.welcome p{
+
+opacity:.9;
+
+font-size:14px;
+
+}
+
+.search{
+
+margin:20px;
+
+}
+
+.search input{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+outline:none;
+
+border-radius:15px;
+
+font-size:15px;
+
+}
+
+.section-title{
+
+margin:20px;
+
+font-size:18px;
+
+font-weight:600;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:15px;
+
+padding:0 20px;
+
+}
+
+.card{
+
+background:rgba(255,255,255,.15);
+
+border-radius:20px;
+
+padding:20px;
+
+text-align:center;
+
+backdrop-filter:blur(15px);
+
+transition:.3s;
+
+cursor:pointer;
+
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+
+}
+
+.card i{
+
+font-size:35px;
+
+margin-bottom:10px;
+
+}
+
+.card h3{
+
+font-size:16px;
+
+margin-bottom:5px;
+
+}
+
+.card p{
+
+font-size:13px;
+
+opacity:.9;
+
+}
+
+.banner{
+
+margin:20px;
+
+padding:18px;
+
+border-radius:20px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(15px);
+
+}
+
+.banner h3{
+
+margin-bottom:8px;
+
+}
+
+.banner p{
+
+font-size:14px;
+
+line-height:1.5;
+
+}
+
+.fab{
+
+position:fixed;
+
+bottom:90px;
+
+right:20px;
+
+width:60px;
+
+height:60px;
+
+border-radius:50%;
+
+background:#fff;
+
+color:#4F46E5;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:28px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.3);
+
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo">
+
+🎓 Polytechnic Hub
+
+</div>
+
+<div class="profile">
+
+<i class="fa-solid fa-user"></i>
+
+</div>
+
+</div>
+
+<div class="welcome">
+
+<h2>
+
+Welcome 👋
+
+</h2>
+
+<p>
+
+Welcome to Polytechnic Hub Student Community.
+
+</p>
+
+</div>
+
+<div class="search">
+
+<input
+
+type="text"
+
+placeholder="Search Students, Notes, Community...">
+
+</div>
+
+<div class="section-title">
+
+Quick Access
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<i class="fa-solid fa-users"></i>
+
+<h3>
+
+Students
+
+</h3>
+
+<p>
+
+View Student Directory
+
+</p>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-book"></i>
+
+<h3>
+
+Notes
+
+</h3>
+
+<p>
+
+Study Materials
+
+</p>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-comments"></i>
+
+<h3>
+
+Community
+
+</h3>
+
+<p>
+
+Discussion Zone
+
+</p>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-user-group"></i>
+
+<h3>
+
+Friends
+
+</h3>
+
+<p>
+
+Connect Students
+
+</p>
+
+</div>
+
+</div>
+
+<div class="banner">
+
+<h3>
+
+📢 Latest Announcement
+
+</h3>
+
+<p>
+
+Welcome to Polytechnic Hub.
+
+New Features Coming Soon...
+
+Stay Connected 🚀
+
+</p>
+
+</div>
+
+<div class="fab">
+
+<i class="fa-solid fa-plus"></i>
+
+</div>
+<div class="bottom-nav">
+
+<a href="home.html" class="nav-item active">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a href="student.html" class="nav-item">
+<i class="fa-solid fa-user-graduate"></i>
+<span>Students</span>
+</a>
+
+<a href="community.html" class="nav-item">
+<i class="fa-solid fa-users"></i>
+<span>Community</span>
+</a>
+
+<a href="notes.html" class="nav-item">
+<i class="fa-solid fa-book"></i>
+<span>Notes</span>
+</a>
+
+<a href="profile.html" class="nav-item">
+<i class="fa-solid fa-user"></i>
+<span>Profile</span>
+</a>
+
+</div>
+
+<style>
+
+.bottom-nav{
+
+position:fixed;
+
+left:0;
+
+bottom:0;
+
+width:100%;
+
+height:75px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(20px);
+
+display:flex;
+
+justify-content:space-around;
+
+align-items:center;
+
+border-top:1px solid rgba(255,255,255,.2);
+
+}
+
+.nav-item{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+text-decoration:none;
+
+color:white;
+
+font-size:12px;
+
+transition:.3s;
+
+}
+
+.nav-item i{
+
+font-size:22px;
+
+margin-bottom:4px;
+
+}
+
+.nav-item:hover{
+
+transform:translateY(-4px);
+
+}
+
+.active{
+
+color:#FFD700;
+
+}
+
+</style>
+
+<script>
+
+const cards=document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+
+card.addEventListener("click",()=>{
+
+card.style.transform="scale(.96)";
+
+setTimeout(()=>{
+
+card.style.transform="scale(1)";
+
+},150);
+
+});
+
+});
+
+document.querySelector(".fab").addEventListener("click",()=>{
+
+alert("Create New Post (Coming Soon)");
+
+});
+
+</script>
+
+</body>
+
+</html>
